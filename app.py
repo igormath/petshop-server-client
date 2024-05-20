@@ -3,11 +3,11 @@ from data import produtos
 
 app = Flask(__name__)
 
-@app.route('/produtos_get', methods=['GET'])
+@app.route('/produtos', methods=['GET'])
 def read():
     return produtos
 
-@app.route('/produtos_post', methods=['POST'])
+@app.route('/produtos', methods=['POST'])
 def create():
     produto = request.json
     idNumber = len(produtos) + 1
@@ -15,7 +15,7 @@ def create():
     produtos.append(produto)
     return jsonify({"mensagem": "Produto adicionado com sucesso!", "produtos": produtos}), 201
 
-@app.route('/produtos_delete/<int:id>', methods=['DELETE'])
+@app.route('/produtos/<int:id>', methods=['DELETE'])
 def delete(id):
     for i in range(len(produtos)):
         if produtos[i]["id"] == id:
@@ -23,7 +23,7 @@ def delete(id):
             return jsonify({"mensagem": "Produto removido com sucesso!", "produtos": produtos}), 200
     return jsonify({"mensagem": "Produto não encontrado!"}), 404
 
-@app.route('/produtos_update/<int:id>', methods=['PUT'])
+@app.route('/produtos/<int:id>', methods=['PUT'])
 def update(id):
     for i in range(len(produtos)):
         if produtos[i]["id"] == id:
