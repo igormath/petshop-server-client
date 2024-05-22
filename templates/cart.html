@@ -7,17 +7,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
   <title>KI PetShop</title>
-  <link rel="stylesheet" href="index.css">
-  <link rel="shortcut icon" href="./assets/paw-3-svgrepo-com.svg" type="image/x-icon">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/index.css') }}">
+  <link rel="shortcut icon" href="{{ url_for('static',filename='images/paw-3-svgrepo-com.svg') }}" type="image/x-icon">
 </head>
 <body>
   <header class="header">
     <div class="header__container">
-      <img class="header__logo" src="./assets/pata.png" alt="Ícone KI Petshop">
-      <a href="./index.html"><h1 class="title">KI PetShop</h1></a>
+      <img class="header__logo" src="{{ url_for('static', filename='images/pata.png') }}" alt="Ícone KI Petshop">
+      <a href="http://localhost:5000/main"><h1 class="title">KI PetShop</h1></a>
       <div class="header__container-icons">
-        <img class="header__profile-icon" src="./assets/user-3-svgrepo-com.svg" alt="Ícone Perfil">
-        <img class="header__cart-icon" src="./assets/carrinho-de-compras.png" alt="Ícone carrinho de compras">
+        <img class="header__profile-icon" src="{{ url_for('static', filename='images/user-3-svgrepo-com.svg') }}" alt="Ícone Perfil">
+        <img class="header__cart-icon" src="{{ url_for('static', filename='images/carrinho-de-compras.png') }}" alt="Ícone carrinho de compras">
         <p class="cart__number">0</p>
       </div>
     </div>
@@ -47,25 +47,25 @@
         <li class="footer__nav-item"><a class="footer__nav-link" href="">Sobre</a></li>
         <li class="footer__nav-item"><a class="footer__nav-link" href="">Central de atendimento</a></li>
         <li class="footer__nav-item"><a class="footer__nav-link" href="">FAQ</a></li>
-        <li class="footer__nav-item"><a class="footer__nav-link" href="">Nossa Loja</a></li>
+        <li class="footer__nav-item"><a class="footer__nav-link" href="http://localhost:5000/">CRUD</a></li>
       </ul>
     </nav>
     <div class="footer__payments">
       <h3 class="footer__subtitle">Formas de Pagamento</h3>
       <ul class="footer__payment-list">
-        <li class="footer__payment-item"><img class="footer__payment-icon" src="./assets/icons8-foto-96.png" alt="Ícone pix"></li>
-        <li class="footer__payment-item"><img class="footer__payment-icon" src="./assets/icons8-cartão-96.png" alt="Ícone cartão"></li>
-        <li class="footer__payment-item"><img class="footer__payment-icon" src="./assets/icons8-boleto-64.png" alt="Ícone boleto"></li>
+        <li class="footer__payment-item"><img class="footer__payment-icon" src="{{ url_for('static', filename='images/icons8-foto-96.png') }}" alt="Ícone pix"></li>
+        <li class="footer__payment-item"><img class="footer__payment-icon" src="{{ url_for('static', filename='images/icons8-cartão-96.png') }}" alt="Ícone cartão"></li>
+        <li class="footer__payment-item"><img class="footer__payment-icon" src="{{ url_for('static', filename='images/icons8-boleto-64.png') }}" alt="Ícone boleto"></li>
       </ul>
     </div>
     <div class="footer__socials">
       <h3 class="footer__subtitle">Redes Sociais</h3>
       <ul class="footer__social-list">
-        <li class="footer__social-item"><img class="footer__social-icon" src="./assets/icons8-whatsapp-96.png" alt="Ícone WhatsApp"></li>
-        <li class="footer__social-item"><img class="footer__social-icon" src="./assets/icons8-instagram-96.png" alt="Ícone Instagram"></li>
+        <li class="footer__social-item"><img class="footer__social-icon" src="{{ url_for('static', filename='images/icons8-whatsapp-96.png') }}" alt="Ícone WhatsApp"></li>
+        <li class="footer__social-item"><img class="footer__social-icon" src="{{ url_for('static', filename='images/icons8-instagram-96.png') }}" alt="Ícone Instagram"></li>
       </ul>
     </div>
   </footer>
-  <script type="module" src="./cart.js"></script>
+  <script src="{{url_for('static', filename='scripts/cart.js')}}"></script>
 </body>
 </html>
