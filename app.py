@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, jsonify
 import sqlalchemy as db
-from sqlalchemy import create_engine, MetaData, Table, delete
+from sqlalchemy import create_engine, MetaData, Table, delete, insert, update
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -41,7 +41,7 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 @app.route('/produtos', methods=['GET'])
-def read():
+def read_product():
     products = []
     query = Produto.select()
     exe = connection.execute(query)
@@ -59,10 +59,13 @@ def read():
     return products, 200
 
 @app.route('/produtos', methods=['POST'])
-def create():
+def create_product():
     produto = request.json
-    ins = Produto.insert().values(name=produto['name'], price=produto['price'])
-    connection.execute(ins)
+    statement = (
+            insert(Produto).
+            values(name=produto['name'], price=produto['price'])
+        )
+    connection.execute(statement)
     connection.commit()
     return jsonify({'message': 'Produto inserido com sucesso!'}), 201
 
@@ -81,16 +84,18 @@ def delete_product(id):
     return jsonify({'message': 'Produto removido com sucesso!'}), 200
 
 @app.route('/produtos/<int:id>', methods=['PUT'])
-def update(id):
+def update_product(id):
     produto = request.json
 
     exists = connection.execute(Produto.select().where(Produto.c.id == id)).fetchone()
     if not exists:
         return jsonify({'message': 'Produto não encontrado'}), 404
 
-    statement = Produto.update().\
-        values(name=produto['name'], price=produto['price']).\
-        where(Produto.columns.id == id)
+    statement = (
+            update(Produto).
+            where(Produto.c.id == id).
+            values(name=produto['name'], price=produto['price'])
+        )
     connection.execute(statement)
     connection.commit()
     return jsonify({'message': 'Produto atualizado com sucesso!'}), 200
