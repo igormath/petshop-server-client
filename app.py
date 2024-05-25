@@ -1,8 +1,16 @@
 from flask import Flask, request, render_template, jsonify
-from data import produtos
+import sqlalchemy as db
+from sqlalchemy import create_engine, MetaData, Table, delete
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+db_url = 'postgresql://postgres:teste123@localhost:5432/ki_petshop'
+engine = create_engine(db_url)
+connection = engine.connect()
+metadata = db.MetaData()
+
+Produto = db.Table('product', metadata, autoload_with=engine)
 
 @app.route('/main')
 def index():
@@ -34,37 +42,58 @@ def page_not_found(e):
 
 @app.route('/produtos', methods=['GET'])
 def read():
+    products = []
+    query = Produto.select()
+    exe = connection.execute(query)
+    result = exe.fetchall()
+
+    for x in result:
+        x_dict = dict(x._mapping)
+        x_dict['price'] = float(x_dict['price'])
+        products.append(x_dict)
+
     nome = request.args.get('name')
     if nome:
-        produtosEncontrados = [produto for produto in produtos if nome.lower() in produto['name'].lower()]
+        produtosEncontrados = [produto for produto in products if nome.lower() in produto['name'].lower()]
         return produtosEncontrados, 200
-    return produtos, 200
+    return products, 200
 
 @app.route('/produtos', methods=['POST'])
 def create():
     produto = request.json
-    idNumber = len(produtos) + 1
-    produto['id'] = idNumber
-    produtos.append(produto)
-    return jsonify({"mensagem": "Produto adicionado com sucesso!", "produtos": produtos}), 201
+    ins = Produto.insert().values(name=produto['name'], price=produto['price'])
+    connection.execute(ins)
+    connection.commit()
+    return jsonify({'message': 'Produto inserido com sucesso!'}), 201
 
 @app.route('/produtos/<int:id>', methods=['DELETE'])
-def delete(id):
-    for i in range(len(produtos)):
-        if produtos[i]["id"] == id:
-            produtos.pop(i)
-            return jsonify({"mensagem": "Produto removido com sucesso!", "produtos": produtos}), 200
-    return jsonify({"mensagem": "Produto não encontrado!"}), 404
+def delete_product(id):
+    exists = connection.execute(Produto.select().where(Produto.c.id == id)).fetchone()
+    if not exists:
+        return jsonify({'message': 'Produto não encontrado'}), 404
+
+    statement = (
+        delete(Produto).
+        where(Produto.c.id == id)
+    )
+    connection.execute(statement)
+    connection.commit()
+    return jsonify({'message': 'Produto removido com sucesso!'}), 200
 
 @app.route('/produtos/<int:id>', methods=['PUT'])
 def update(id):
-    for i in range(len(produtos)):
-        if produtos[i]["id"] == id:
-            produtoNew = request.json
-            produtos[i]["name"] = produtoNew['name']
-            produtos[i]["price"] = produtoNew['price']
-            return jsonify({"mensagem": "Produto atualizado com sucesso!", "produtos": produtos}), 200
-    return jsonify({"mensagem": "Produto não encontrado!"}), 404
+    produto = request.json
+
+    exists = connection.execute(Produto.select().where(Produto.c.id == id)).fetchone()
+    if not exists:
+        return jsonify({'message': 'Produto não encontrado'}), 404
+
+    statement = Produto.update().\
+        values(name=produto['name'], price=produto['price']).\
+        where(Produto.columns.id == id)
+    connection.execute(statement)
+    connection.commit()
+    return jsonify({'message': 'Produto atualizado com sucesso!'}), 200
 
 app.run(debug=True)
 
