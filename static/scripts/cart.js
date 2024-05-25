@@ -25,7 +25,7 @@ function renderJSON(jsonInput){
     productsContainer.textContent = '';
     productsContainer.insertAdjacentHTML("afterbegin", 
     (`<section class="product card">
-    <img class="product__image" src="static/images/produtos/produto${jsonInput.id}.png" alt="Produto ${jsonInput.id}">
+    <img class="product__image" src="static/images/produtos/produto${jsonInput.id}.png" onerror="this.onerror=null; this.src='static/images/produtos/default-image.jpg'" alt="Produto ${jsonInput.id}">
     <h3 class="product__name">${jsonInput.name}</h3>
     <p class="product__price">Preço unitário: R$${priceFloat.toFixed(2)}</p>
     <p class="product__quant">Quantidade: <span class="product__quant--number">1</span></p>

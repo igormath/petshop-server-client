@@ -21,7 +21,7 @@ function renderJSONArray(jsonInput){
     productsList.insertAdjacentHTML("afterbegin", jsonInput.map((product) => {
         let priceFloat = parseFloat(product.price);
         return `<li class="product">
-        <img class="product__image" src="static/images/produtos/produto${product.id}.png" alt="Produto ${product.id}">
+        <img class="product__image" src="static/images/produtos/produto${product.id}.png" onerror="this.onerror=null; this.src='static/images/produtos/default-image.jpg'" alt="Produto ${product.id}">
         <h3 class="product__name">${product.name}</h3>
         <p class="product__price">R$${priceFloat.toFixed(2)}</p>
         <a href="http://localhost:5000/cart" class="product__btn" data-product-id=${product.id}>Comprar</a>
