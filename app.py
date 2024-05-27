@@ -1,12 +1,16 @@
 from flask import Flask, request, render_template, jsonify
 import sqlalchemy as db
 from sqlalchemy import create_engine, MetaData, Table, delete, insert, update
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-db_url = 'postgresql://postgres:teste123@localhost:5432/ki_petshop'
-engine = create_engine(db_url)
+load_dotenv()
+
+DB_URL = os.getenv('DB_URL')
+engine = create_engine(DB_URL)
 connection = engine.connect()
 metadata = db.MetaData()
 
